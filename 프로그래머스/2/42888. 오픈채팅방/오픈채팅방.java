@@ -1,34 +1,63 @@
 import java.util.*;
 
 class Solution {
+    private static final String ENTER_FORMAT = "%s님이 들어왔습니다.";
+    private static final String LEAVE_FORMAT = "%s님이 나갔습니다.";
+    
+    private HashMap<String, UserInfo> userMap = new HashMap<>();
+    
+    private class UserInfo {
+        public String userId;
+        public String nickName;
+        
+        public UserInfo(String userId, String nickName) {
+            this.userId = userId;
+            this.nickName = nickName;
+        }
+    }
+    
+    private class Command {
+        public char command;
+        public String userId;
+        
+        public Command(char command, String userName) {
+            this.command = command;
+            this.userId = userName;
+        }
+    }
+    
     public String[] solution(String[] record) {
-        // Enter/Leave 메시지를 저장할 해시맵 생성
-        HashMap<String, String> msg = new HashMap<>();
-        msg.put("Enter", "님이 들어왔습니다.");
-        msg.put("Leave", "님이 나갔습니다.");
+        ArrayList<Command> commandList = new ArrayList<>();
         
-        HashMap<String, String> uid = new HashMap<>();
-        
-        // 1. record의 각 줄을 하나씩 처리
-        for(String s : record) {
-            String[] cmd = s.split(" ");
-            if(cmd.length == 3) { // 2. Enter 또는 Change인 경우
-                uid.put(cmd[1], cmd[2]); // 같은 키를 가지면 덮어쓰기한다.
+        for(String rec : record) {
+            String[] split = rec.split(" ");
+            String command = split[0];
+            String userId = split[1];
+            String nickName = null;
+            
+            switch(command.charAt(0)) {
+                case 'E':
+                    nickName = split[2];
+                    if(userMap.containsKey(userId) == false) {
+                        userMap.put(userId, new UserInfo(userId, nickName));
+                    }else {
+                        userMap.get(userId).nickName = nickName;
+                    }
+                    
+                    commandList.add(new Command(command.charAt(0), userId));
+                    break;
+                case 'L':
+                    commandList.add(new Command(command.charAt(0), userId));
+                    break;
+                case 'C':
+                    nickName = split[2];
+                    userMap.get(userId).nickName = nickName;
+                    break;
             }
         }
         
-        // 답을 저장할 answer List 생성
-        ArrayList<String> answer = new ArrayList<>();
-        
-        // 3. record의 각 줄을 하나씩 처리
-        for(String s : record) {
-            String[] cmd = s.split(" ");
-            // 4. 각 상태에 맞는 메시지를 answer에 저장
-            if(msg.containsKey(cmd[0])) { // cmd[0].equals() 를 쓰는 것이 아니라 역으로 msg에 있는 key값을 기준으로 비교하기
-                answer.add(uid.get(cmd[1]) + msg.get(cmd[0]));
-            }
-        }
-        
-        return answer.toArray(new String[0]);
+        return commandList.stream()
+            .map(cmd -> String.format(cmd.command == 'E' ? ENTER_FORMAT : LEAVE_FORMAT , userMap.get(cmd.userId).nickName))
+            .toArray(ary -> new String[commandList.size()]);
     }
 }
