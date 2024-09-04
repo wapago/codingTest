@@ -19,6 +19,7 @@ class Solution {
             reportedUser.get(reportedId).add(userId);
         }
         
+        // Map 순회 ==> entrySet()
         for(Map.Entry<String, HashSet<String>> entry : reportedUser.entrySet()) {
             if(entry.getValue().size() >= k) {
                 for(String uid : entry.getValue()) {
