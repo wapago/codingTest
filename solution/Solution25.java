@@ -17,6 +17,7 @@ public class Solution25 {
         return result;
     }
 
+    // 전위 (부-왼-오)
     private static String preorder(int[] nodes, int idx) {
         if(idx >= nodes.length) {
             return "";
@@ -28,6 +29,7 @@ public class Solution25 {
                 preorder(nodes, 2 * idx + 2);
     }
 
+    // 중위 (왼-부-오)
     private static String inorder(int[] nodes, int idx) {
         if (idx >= nodes.length) { // idx가 범위를 벗어나면 빈 문자열 반환
             return "";
@@ -39,6 +41,7 @@ public class Solution25 {
                 inorder(nodes, 2 * idx + 2);
     }
 
+    // 후위 (왼-오-부)
     private static String postorder(int[] nodes, int idx) {
         if (idx >= nodes.length) { // idx가 범위를 벗어나면 빈 문자열 반환
             return "";
