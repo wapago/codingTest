@@ -1,21 +1,20 @@
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.stream.Collectors;
 
 class Solution {
     public int solution(int[] nums) {
-        int answer = 0;
+        // nums리스트에서 중복을 제거한 집합(set)을 구함
+        HashSet<Integer> set = Arrays.stream(nums).boxed()
+                                     .collect(Collectors.toCollection(HashSet::new));
         
-        HashSet<Integer> set = new HashSet<>();
+        // 폰켓몬의 총 수
+        int n = nums.length;
         
-        for(int num : nums) {
-            System.out.println(num);
-            set.add(num);
-        }
+        // 선택할 폰켓몬의 수
+        int k = n / 2;
         
-        int targetTypeCount = (nums.length / 2);    // 가질 수 있는 종류의 수
-        
-        if(targetTypeCount >= set.size()) return set.size();
-        
-        // return (set.size() * (set.size() - 1)) / 2;
-        return targetTypeCount;
+        // 중복을 제거한 폰켓몬의 종류 수와 선택할 폰켓몬의 수 중 작은 값 반환
+        return Math.min(k, set.size());
     }
 }
